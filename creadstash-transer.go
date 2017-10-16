@@ -174,6 +174,17 @@ func setDatum(cArgs *CommandArgs, cd *CredstashDatam) (*[]byte, error) {
 	return &output, nil
 }
 
+func deleteDatum(env string, cd *CredstashDatam) (*[]byte, error) {
+	cmd := exec.Command("credstash", "-t", env, "delete", cd.keyString())
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Println("Failed to delete:", cd.keyString(), "in:", env, err)
+		return &output, errors.New("failed to delete credstash data")
+	}
+
+	return &output, nil
+}
+
 func main() {
 	commandArgs := os.Args
 	cArgs, err := getArguments(&commandArgs)
@@ -187,7 +198,8 @@ func main() {
 	}
 
 	cd := fillCredstashData(fData)
-	for _, d := range *cd {
+	for _, d := range *cd {	
+		deleteDatum(cArgs.to, d)
 		message, err := setDatum(cArgs, d)
 		if err != nil {
 			continue
