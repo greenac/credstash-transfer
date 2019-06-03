@@ -198,7 +198,7 @@ func main() {
 	}
 
 	cd := fillCredstashData(fData)
-	for _, d := range *cd {	
+	for _, d := range *cd {
 		deleteDatum(cArgs.to, d)
 		message, err := setDatum(cArgs, d)
 		if err != nil {
